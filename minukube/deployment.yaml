@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: l-tech-server-deployment
+  labels:
+    app: l-tech-server
+spec:
+  # Rolling Update Strategy is defined by default, see note below
+  replicas: 3 # Run 3 instances of your application
+  selector:
+    matchLabels:
+      app: l-tech-server
+  template:
+    metadata:
+      labels:
+        app: l-tech-server
+    spec:
+      containers:
+      - name: l-tech-server-container
+        image: biprob/l-tect-server:v1 
+        ports:
+        - containerPort: 5000 
+        env:
+        # Load environment variables from a Kubernetes Secret (best practice)
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: l-tech-server-secret
+              key: db_user
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: l-tech-server-secret
+              key: db_pass
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: l-tech-server-secret
+              key: jwt_secret
+        # You can pass PORT directly as it's not sensitive
+        - name: PORT
+          value: "5000"

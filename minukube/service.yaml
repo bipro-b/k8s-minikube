@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: l-tech-server-service
+spec:
+  # Selects the pods created by the Deployment
+  selector:
+    app: l-tech-server
+  # Expose the service externally using a cloud provider's LoadBalancer
+  type: LoadBalancer 
+  ports:
+    - protocol: TCP
+      port: 80 # The port the service will listen on (default HTTP port)
+      targetPort: 5000 # The containerPort defined in the Deployment
