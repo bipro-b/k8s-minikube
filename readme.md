@@ -1,24 +1,14 @@
 
-````markdown
-# 🚀 Minikube Installation Guide
+# Minikube Installation 
 
-This guide provides **step-by-step instructions** for installing **Minikube** on Ubuntu.  
-You can run a **single-node Kubernetes cluster** locally or in AWS for **development and testing** purposes.
+This guide provides step-by-step instructions for installing Minikube on Ubuntu. You can run a single-node Kubernetes cluster locally or in AWS for development and testing purposes.
 
+## Pre-requisites
 
----
+* Ubuntu OS
+* sudo privileges
+* Virtualization support enabled (Check with `egrep -c '(vmx|svm)' /proc/cpuinfo`, 0=disabled 1=enabled) 
 
-
-## 🧩 Pre-requisites
-
-- Ubuntu OS
-- `sudo` privileges
-- Virtualization support enabled  
-  *(Check with the command below — output should be `1` or more)*
-
-```bash
-egrep -c '(vmx|svm)' /proc/cpuinfo
-````
 
 ---
 ![Kubernetes Success](./image.png)
