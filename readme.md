@@ -8,7 +8,6 @@ You can run a **single-node Kubernetes cluster** locally or in AWS for **develop
 
 ---
 
-![Kubernetes Success](./image.png)
 
 ## 🧩 Pre-requisites
 
@@ -21,6 +20,9 @@ You can run a **single-node Kubernetes cluster** locally or in AWS for **develop
 egrep -c '(vmx|svm)' /proc/cpuinfo
 ````
 
+---
+![Kubernetes Success](./image.png)
+---
 ---
 
 ## ⚙️ Step 1: Update System Packages
