@@ -5,9 +5,10 @@
 This guide provides **step-by-step instructions** for installing **Minikube** on Ubuntu.  
 You can run a **single-node Kubernetes cluster** locally or in AWS for **development and testing** purposes.
 
-![Kubernetes Success](./image.png)
 
 ---
+
+![Kubernetes Success](./image.png)
 
 ## 🧩 Pre-requisites
 
