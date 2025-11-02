@@ -5,9 +5,7 @@
 This guide provides **step-by-step instructions** for installing **Minikube** on Ubuntu.  
 You can run a **single-node Kubernetes cluster** locally or in AWS for **development and testing** purposes.
 
-![running in server](./image.png)
-
-🎥 **View Ec2 machine:** [Watch on YouTube](https://youtu.be/_esVYHajxc4)
+![Kubernetes Success](./image.png)
 
 ---
 
@@ -203,8 +201,8 @@ Create a Kubernetes secret for sensitive data:
 
 ```bash
 kubectl create secret generic l-tech-server-secret \
-  --from-literal=db_user=bipro \
-  --from-literal=db_pass=bipro \
+  --from-literal=db_user=your_user \
+  --from-literal=db_pass=your_pass \
   --from-literal=jwt_secret=erkjweklrjewkrjewkrewkjrhjwehrjwegrwegrwherg2442424243
 ```
 
