@@ -1,27 +1,42 @@
-# Minikube Installation Guide for Ubuntu
 
-This guide provides step-by-step instructions for installing Minikube on Ubuntu. You can run a single-node Kubernetes cluster locally or in AWS for development and testing purposes.
+````markdown
+# 🚀 Minikube Installation Guide
 
-## Pre-requisites
+This guide provides **step-by-step instructions** for installing **Minikube** on Ubuntu.  
+You can run a **single-node Kubernetes cluster** locally or in AWS for **development and testing** purposes.
 
-* Ubuntu OS
-* sudo privileges
-* Virtualization support enabled (Check with `egrep -c '(vmx|svm)' /proc/cpuinfo`, 0=disabled 1=enabled) 
+![running in server](./image.png)
+
+🎥 **View Ec2 machine:** [Watch on YouTube](https://youtu.be/_esVYHajxc4)
 
 ---
 
-## Step 1: Update System Packages
+## 🧩 Pre-requisites
 
-Update your UBUNTU package lists to make sure you are getting the latest version and dependencies.
+- Ubuntu OS
+- `sudo` privileges
+- Virtualization support enabled  
+  *(Check with the command below — output should be `1` or more)*
+
+```bash
+egrep -c '(vmx|svm)' /proc/cpuinfo
+````
+
+---
+
+## ⚙️ Step 1: Update System Packages
+
+Update your Ubuntu package lists to make sure you are getting the latest versions and dependencies.
 
 ```bash
 sudo apt update
 ```
 
+---
 
-## Step 2: Install Required Packages
+## ⚙️ Step 2: Install Required Packages
 
-Install some basic required packages.
+Install essential dependencies.
 
 ```bash
 sudo apt install -y curl wget apt-transport-https
@@ -29,65 +44,73 @@ sudo apt install -y curl wget apt-transport-https
 
 ---
 
-## Step 3: Install Docker
+## 🐳 Step 3: Install Docker
 
-Minikube can run a Kubernetes cluster either in a VM or locally via Docker. This guide demonstrates the Docker method.
+Minikube can run a Kubernetes cluster either in a VM or locally via Docker.
+This guide uses **Docker** as the driver.
 
 ```bash
 sudo apt install -y docker.io
 ```
 
-
-Start and enable Docker.
+Start and enable Docker:
 
 ```bash
 sudo systemctl enable --now docker
 ```
 
-Add current user to docker group (To use docker without root)
+Add your user to the Docker group to avoid needing `sudo`:
 
 ```bash
 sudo usermod -aG docker $USER
 ```
-Now, logout from the machine and connect again.
 
-Alternatively (without sudo reboot):
+> 🔁 **Note:** You’ll need to log out and back in for this to take effect.
+
+Alternatively (without logout):
+
 ```bash
 sudo chown $USER /var/run/docker.sock
 ```
 
 ---
 
-## Step 4: Install Minikube
+## ☸️ Step 4: Install Minikube
 
-First, download the Minikube binary using `curl`:
-
-```bash
-curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64  #download
-sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64 #install Minikube
-```
-
-Make it executable and move it into your path:
+Download the latest Minikube binary:
 
 ```bash
-chmod +x minikube
-sudo mv minikube /usr/local/bin/
+curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 ```
 
-Check minikube version
+Install Minikube:
+
+```bash
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+```
+
+Make it executable:
+
+```bash
+sudo chmod +x /usr/local/bin/minikube
+```
+
+Check installation:
+
 ```bash
 minikube version
 ```
 
 ---
 
-## Step 5: Install kubectl
+## 🧰 Step 5: Install kubectl
 
-Download kubectl, which is a Kubernetes command-line tool.
+Download `kubectl`, the Kubernetes command-line tool:
 
 ```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 ```
+
 Make it executable and move it into your path:
 
 ```bash
@@ -95,37 +118,41 @@ chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
 ```
 
----
-
-## Step 6: Start Minikube
-
-Now, start Minikube with the following command:
+Verify installation:
 
 ```bash
-minikube start --driver=docker --vm=true 
+kubectl version --client
 ```
-
-If you already have Docker installed, start Minikube with the following command:
-
-```bash
-minikube start 
-```
-
-This will start a single-node Kubernetes cluster inside a Docker container and your Kubernetes cluster should be ready.
 
 ---
 
-## Step 7: Check Cluster Status
+## 🚀 Step 6: Start Minikube
 
-Check the cluster status with:
+Start your Minikube cluster using Docker as the driver:
+
+```bash
+minikube start --driver=docker
+```
+
+Alternatively, if Docker is already running:
+
+```bash
+minikube start
+```
+
+This starts a **single-node Kubernetes cluster** inside Docker.
+
+---
+
+## ✅ Step 7: Check Cluster Status
+
+Check Minikube cluster status:
 
 ```bash
 minikube status
 ```
 
-
-
-You can also use `kubectl` to interact with your cluster:
+Check your Kubernetes nodes:
 
 ```bash
 kubectl get nodes
@@ -133,9 +160,9 @@ kubectl get nodes
 
 ---
 
-## Step 8: Stop Minikube
+## 💤 Step 8: Stop Minikube
 
-When you are done, you can stop the Minikube cluster with:
+When you’re done, stop the cluster:
 
 ```bash
 minikube stop
@@ -143,9 +170,9 @@ minikube stop
 
 ---
 
-## Optional: Delete Minikube Cluster
+## ❌ Optional: Delete Minikube Cluster
 
-If you wish to delete the Minikube cluster entirely, you can do so with:
+To completely remove your cluster:
 
 ```bash
 minikube delete
@@ -153,65 +180,129 @@ minikube delete
 
 ---
 
-Cheers!
+# 🧱 Deploy a Sample Application
 
-# deploy-sample-application
+Follow these steps **after your Minikube cluster is running**.
+We’ll deploy a simple app and perform a **rolling update**.
 
-Follow the instructions after the Minikube cluster configurations are completed. We will deploy and make rolling update (i.e. app version).
+---
 
-## Create a Namespace
+## 🪣 Step 1: Create a Namespace
 
-In Kubernetes namespaces provide a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace. Run the below command
+Namespaces isolate resources within a cluster.
 
-    kubectl create namespace sample-app
+```bash
+kubectl create namespace sample-app
+```
 
-## Create a Kubernetes deployment
+---
 
-A Kubernetes Deployment tells Kubernetes how to create or modify instances of the pods that hold a containerized (docker our case) application. Deployments can help to efficiently scale the number of replica pods, enable the rollout of updated code in a controlled manner, or roll back to an earlier deployment version if necessary.
+## 🔐 Step 2: Create a Secret
 
-Apply the deployment manifest to your cluster.
+Create a Kubernetes secret for sensitive data:
 
-    kubectl apply -f 01-create-deployment.yaml
+```bash
+kubectl create secret generic l-tech-server-secret \
+  --from-literal=db_user=bipro \
+  --from-literal=db_pass=bipro \
+  --from-literal=jwt_secret=erkjweklrjewkrjewkrewkjrhjwehrjwegrwegrwherg2442424243
+```
 
-Review the deployment configurations.
+---
 
-    kubectl describe deployments.apps --namespace sample-app sample-deployment
+## ⚙️ Step 3: Create a Deployment
 
+A **deployment** defines how pods are created and managed.
 
-## Create a service
+Apply the deployment manifest:
 
-A service allows you to access all replicas through a single IP address or name.
+```bash
+kubectl apply -f 01-create-deployment.yaml
+```
 
-There are different types of Service objects, and the one we want to use for testing is called ClusterIP or LoadBalancer, which means an external load balancer for Minikube.
+Review deployment details:
 
-Apply the service manifest to your cluster.
+```bash
+kubectl describe deployments.apps --namespace sample-app sample-deployment
+```
 
-	kubectl apply -f 02-service-to-expose-deployment.yaml
+---
 
-View all resources that exist in the sample-app namespace.
+## 🌐 Step 4: Create a Service
 
-	kubectl get all --namespace sample-app
+A **service** exposes your deployment to the network.
 
+Apply the service manifest:
 
-## Deploy a new application version (rolling out)
+```bash
+kubectl apply -f 02-service-to-expose-deployment.yaml
+```
 
-In kubernetes you can easily deploy a new version of an existing deployment by updating the image details.
+List resources in the namespace:
 
-Apply `03-update-or-rollout-deployment.yaml` deployment manifest to your cluster.
+```bash
+kubectl get all --namespace sample-app
+```
 
-    kubectl apply -f 03-update-or-rollout-deployment.yaml
+---
 
-Kubernetes performs a rolling update by default to minimize the downtime during upgrades and create a replica set and pods.
-Review the deployment configurations and verify the image details
+## 🔄 Step 5: Rolling Update (New Version Deployment)
 
-    kubectl describe deployments.apps --namespace sample-app   sample-deployment
+Update your app by applying a new deployment version:
 
-## Check if nginx is working from terminal (not on the browser):
-	minikube ip #it will return the minikube IP
+```bash
+kubectl apply -f 03-update-or-rollout-deployment.yaml
+```
 
-	curl http://<ip got from minikube ip command>:30080  # i.e. http://192.168.49.5:30080
+Kubernetes performs a **rolling update** to minimize downtime.
 
-	You should see html content
-## Once you're finished with the sample application, you can remove the sample namespace, service, and deployment with the following command.
+Verify the new image version:
 
-    kubectl delete namespace sample-app
+```bash
+kubectl describe deployments.apps --namespace sample-app sample-deployment
+```
+
+---
+
+## 🌍 Step 6: Test Application Access
+
+Get the Minikube IP:
+
+```bash
+minikube ip
+```
+
+Then test your app from the terminal:
+
+```bash
+curl http://<minikube-ip>:30080
+```
+
+If successful, you’ll see your HTML output.
+
+---
+
+## 🧹 Step 7: Cleanup
+
+Remove all deployed resources:
+
+```bash
+kubectl delete namespace sample-app
+```
+
+---
+
+🎉 **Congratulations!**
+You’ve successfully installed **Minikube**, deployed a **sample Kubernetes app**, and performed a **rolling update**.
+
+![Kubernetes Success](./image.png)
+
+---
+
+📺 **Live in ec2 machine:**
+👉 [https://youtu.be/_esVYHajxc4](https://youtu.be/_esVYHajxc4)
+
+```
+
+---
+
